@@ -123,7 +123,18 @@ namespace testbinary {
 			i++;
 		}
 
-		//this->richTextBox1->Text = Convert::ToString(bits[0]);
+		bool* bit = new bool[size_of_buffer * 8];
+		for (i = 0; i < size_of_buffer; ++i) {
+			for (int j = 0; j < 8; ++j) {
+				bit[j + 8 * i] = bits[i][j];
+			}
+		}
+
+		//for (i = 0; i < size_of_buffer * 8; ++i) {
+		//	this->richTextBox1->Text += Convert::ToString(Convert::ToDecimal(bit[i]));
+		//}
+
+		//this->richTextBox1->Text = Convert::ToString(sizeof(bit));
 		this->textBox1->Text = size_of_buffer.ToString();
 	}
 	private: System::Void MyForm_Resize(System::Object^ sender, System::EventArgs^ e) {
