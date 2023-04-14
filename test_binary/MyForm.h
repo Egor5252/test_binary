@@ -1,6 +1,8 @@
 #pragma once
 #include <fstream>
 #include <bitset>
+#include <vector>
+#include <iterator>
 
 namespace testbinary {
 
@@ -111,19 +113,30 @@ namespace testbinary {
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 		this->openFileDialog1->ShowDialog();
 		String^ file_path = this->openFileDialog1->FileName;
-		auto buffer = File::ReadAllBytes(file_path);
+		array<unsigned char>^ buffer = File::ReadAllBytes(file_path);
 		int size_of_buffer = buffer->Length;
 		String^ binary = "";
 		array<Byte>^ G = gcnew array<Byte>(size_of_buffer);
 		int i = 0;
-		for each (Byte b in buffer) {
-			String^ timed = Convert::ToString(b);
-			binary += timed;
-			G[i] = Convert::ToByte(timed);
+		std::bitset<8> *bits = new std::bitset<8>[size_of_buffer];
+
+		for each (unsigned char b in buffer) {
+			bits[i] = b;
 			i++;
 		}
-		File::WriteAllBytes("C:/Users/egorg/Desktop/output.txt", G);
-		this->richTextBox1->Text = binary;
+
+		bool* bit = new bool[size_of_buffer * 8];
+		for (i = 0; i < size_of_buffer; ++i) {
+			for (int j = 0; j < 8; ++j) {
+				bit[j + 8 * i] = bits[i][j];
+			}
+		}
+
+		//for (i = 0; i < size_of_buffer * 8; ++i) {
+		//	this->richTextBox1->Text += Convert::ToString(Convert::ToDecimal(bit[i]));
+		//}
+
+		//this->richTextBox1->Text = Convert::ToString(sizeof(bit));
 		this->textBox1->Text = size_of_buffer.ToString();
 	}
 	private: System::Void MyForm_Resize(System::Object^ sender, System::EventArgs^ e) {
